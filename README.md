@@ -42,6 +42,13 @@ The link_pred_ppi.sh and node_class_ppi.sh files contain example usages of the c
 * <train_prefix>-feats.npy --- A numpy-stored array of node features; ordering given by id_map.json. Can be omitted and only identity features will be used.
 * <train_prefix>.skl [optional] --- A sklearn-stored format of clustering results. Can be re-caculated by removing the file.
 
-#### Acknowledgements
+### Academic Paper
 
+[**SIGKDD 19**] **A Representation Learning Framework for Property Graphs**, Yifan Hou, Hongzhi Chen, Changji Li, James Cheng,  Ming-Chang Yang.
+
+### Acknowledgement
 The original version of this code base was originally forked from https://github.com/williamleif/GraphSAGE, and we owe many thanks to William L. Hamilton for making the code available.
+
+### License
+
+Copyright 2019, Husky Data Lab, The Chinese University of Hong Kong.
