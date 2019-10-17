@@ -169,6 +169,23 @@ class EdgeMinibatchIterator(object):
 
 class WeightedEdgeMinibatchIterator(EdgeMinibatchIterator):
 
+    """ This minibatch iterator extends from EdgeMinibatchIterator to
+    implement the weighted neighborhood aggregation based on the biased sampled neighboring edges.
+
+    Ref URL: https://www.kdd.org/kdd2019/accepted-papers/view/a-representation-learning-framework-for-property-graphs
+    Please check Section 3.3 for more details
+
+    node_tags -- mapping to the cluster id for nodes after node clustering
+    pweight -- assigned bias if in the same cluster (i.e., b_s, see Alg1 in our paper)
+    nweight -- assigned bias if in different cluster (i.e., b_d, see Alg1 in our paper)
+    directed_graph -- if directed graph or not. If so, we differentiate the in/out edges separately for training 
+    adj_in -- in neighbors, will be used only when directed = True
+    adj_weight -- the biased weighted matrix
+    adj_weight_test -- for testing
+    adj_in_weight -- the biased weighted matrix for in_neighbors, will be used only when directed = True 
+    adj_in_weight_test -- for testing
+    """
+
     def __init__(self, CModel, dif_weight=1, directed_graph=False, same_weight = 1, **kwargs):
         self.node_tags = CModel.labels_
         self.pweight = same_weight
@@ -203,7 +220,7 @@ class WeightedEdgeMinibatchIterator(EdgeMinibatchIterator):
                     if (not self.G[predecessor][nodeid]['train_removed'])]) # place need to switch
                 deg[self.id2idx[nodeid]] = len(neighbors)+len(predecessors)
 
-                # sampling
+                # == sampling bi-adjecent table ===
                 if len(neighbors) == 0:
                     continue
                 if len(neighbors) > self.max_degree:
@@ -212,6 +229,7 @@ class WeightedEdgeMinibatchIterator(EdgeMinibatchIterator):
                     neighbors = np.random.choice(neighbors, self.max_degree, replace=True)
                 adj[self.id2idx[nodeid], :] = neighbors
 
+                # == sampling bi-adjecent table ===
                 if len(predecessors) == 0:
                     continue
                 if len(predecessors) > self.max_degree:
@@ -462,6 +480,12 @@ class NodeMinibatchIterator(object):
 
 class WeightedNodeMinibatchIterator(NodeMinibatchIterator):
 
+    """ This minibatch iterator extends from NodeMinibatchIterator to
+    implement the weighted neighborhood aggregation based on the biased sampled neighbors.
+
+    Ref URL: https://www.kdd.org/kdd2019/accepted-papers/view/a-representation-learning-framework-for-property-graphs
+    """
+
     def __init__(self, CModel, dif_weight = 1, directed_graph = False, same_weight = 1, **kwargs):
         self.node_tags = CModel.labels_
         # scalability design: weight configuration -> dict
@@ -501,7 +525,7 @@ class WeightedNodeMinibatchIterator(NodeMinibatchIterator):
                     if (not self.G[predecessor][nodeid]['train_removed'])])
                 deg[self.id2idx[nodeid]] = len(neighbors)+len(predecessors)
 
-                # == adjecent table ===
+                # == sampling bi-adjecent table ===
                 if len(neighbors) > self.max_degree:
                     neighbors = np.random.choice(neighbors, self.max_degree, replace=False)
                 elif len(neighbors) > 0 and len(neighbors) < self.max_degree:
@@ -510,6 +534,7 @@ class WeightedNodeMinibatchIterator(NodeMinibatchIterator):
                     neighbors = np.random.choice([nodeid], self.max_degree, replace=True)
                 adj[self.id2idx[nodeid], :] = neighbors
 
+                # == sampling in-adjecent table ===
                 if len(predecessors) > self.max_degree:
                     predecessors = np.random.choice(predecessors, self.max_degree, replace=False)
                 elif len(predecessors) > 0 and len(predecessors) < self.max_degree:
