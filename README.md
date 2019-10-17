@@ -22,11 +22,10 @@ We provide detailed analyses on the efficacy of our method and validate the perf
 
 ### Requirements
 
-* tensorflow 
+* tensorflow (<=1.14.0)
 * numpy
-* sklearn
+* scikit-learn
 * networkx (<=1.11)
-* concurrent
 
 ### Running the code
 
