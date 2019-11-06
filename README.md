@@ -47,7 +47,7 @@ The link_pred_ppi.sh and node_class_ppi.sh files contain example usages of the c
 [**SIGKDD 19**] **A Representation Learning Framework for Property Graphs**, Yifan Hou, Hongzhi Chen, Changji Li, James Cheng,  Ming-Chang Yang.
 
 ### Acknowledgement
-The original version of this code base was originally forked from https://github.com/williamleif/GraphSAGE, and we owe many thanks to William L. Hamilton for making the code available.
+The original version of this code base was originally forked from https://github.com/williamleif/GraphSAGE, and we owe many thanks to William L. Hamilton for making the code available. We also thank Xiaoxi Wang's contribution to this project during her senior year internship in CUHK.
 
 ### License
 
