@@ -112,67 +112,6 @@ class SupervisedPGE(models.SampleAndAggregate):
         self.opt_op = self.optimizer.apply_gradients(clipped_grads_and_vars)
         self.preds = self.predict()
 
-
-    def diAggregate(self, samples1, samples_in1, input_features, dims, num_samples, support_sizes, batch_size=None,
-            aggregators=None, name=None, concat=False, model_size="small"):
-        """ at each layer, aggregate hidden representations of neighbors to compute the hidden representations
-            at next layer.
-        args:
-            samples: a list of samples of variable hops away for convolving at each layer of the
-                network. length is the number of layers + 1. each is a vector of node indices.
-            input_features: the input features for each sample of various hops away.
-            dims: a list of dimensions of the hidden representations from the input layer to the
-                final layer. length is the number of layers + 1.
-            num_samples: list of number of samples for each layer.
-            support_sizes: the number of nodes to gather information from for each layer.
-            batch_size: the number of inputs (different for batch inputs and negative samples).
-        returns:
-            the hidden representation at the final layer for all nodes in batch
-        """
-        if batch_size is None:
-            batch_size = self.batch_size
-
-        # length: number of layers + 1
-        hidden1 = [tf.nn.embedding_lookup(input_features, node_samples) for node_samples in samples1]
-        hidden2 = [tf.nn.embedding_lookup(input_features, node_samples) for node_samples in samples_in1]
-        hidden = []
-        for h1,h2 in zip(hidden1,hidden2):
-            hidden.append(tf.concat([h1, h2], 1))
-
-        new_agg = aggregators is None
-        if new_agg:
-            aggregators = []
-
-        for layer in range(len(num_samples)):
-            if new_agg:
-                dim_mult = 2 if concat and (layer != 0) else 1
-                # aggregator at current layer
-                if layer == len(num_samples) - 1:
-                    aggregator = self.aggregator_cls(self.directed_factor*dim_mult*dims[layer], dims[layer+1]*self.directed_factor, act=lambda x : x,
-                            dropout=self.placeholders['dropout'],
-                            name=name, concat=concat, model_size=model_size)
-                else:
-                    aggregator = self.aggregator_cls(self.directed_factor*dim_mult*dims[layer], dims[layer+1]*self.directed_factor,
-                            dropout=self.placeholders['dropout'],
-                            name=name, concat=concat, model_size=model_size)
-                aggregators.append(aggregator)
-            else:
-                aggregator = aggregators[layer]
-            # hidden representation at current layer for all support nodes that are various hops away
-            next_hidden = []
-            # as layer increases, the number of support nodes needed decreases
-            for hop in range(len(num_samples) - layer):
-                dim_mult = 2 if concat and (layer != 0) else 1
-
-                neigh_dims = [batch_size * support_sizes[hop],
-                              num_samples[len(num_samples) - hop - 1],
-                              self.directed_factor*dim_mult*dims[layer]]
-                h = aggregator((hidden[hop],
-                                tf.reshape(hidden[hop + 1], neigh_dims)))
-                next_hidden.append(h)
-            hidden = next_hidden
-        return hidden[0], aggregators
-
     def _loss(self):
         # Weight decay loss
         for aggregator in self.aggregators:
