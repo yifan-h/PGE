@@ -1,6 +1,6 @@
 ## A Representation Learning Framework for Property Graphs
 
-#### Authors: Yifan Hou(yfhou@cse.cuhk.edu.hk), [Hongzhi Chen](https://yaobaiwei.github.io/)(hzchen@cse.cuhk.edu.hk), Changji Li(cjli@cse.cuhk.edu.hk)
+#### Authors: [Yifan Hou](https://yifan-h.github.io/)(yfhou@cse.cuhk.edu.hk), [Hongzhi Chen](https://yaobaiwei.github.io/)(hzchen@cse.cuhk.edu.hk), Changji Li(cjli@cse.cuhk.edu.hk)
 
 ### Overview
 
