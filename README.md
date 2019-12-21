@@ -1,6 +1,6 @@
 ## A Representation Learning Framework for Property Graphs
 
-#### Authors: [Yifan Hou](https://yifan-h.github.io/)(yfhou@cse.cuhk.edu.hk), [Hongzhi Chen](https://yaobaiwei.github.io/)(hzchen@cse.cuhk.edu.hk), Changji Li(cjli@cse.cuhk.edu.hk)
+#### Authors: [Yifan Hou](https://yifan-h.github.io/), Hongzhi Chen, Changji Li, James Cheng, Ming-Chang Yang
 
 ### Overview
 
@@ -48,7 +48,3 @@ The link_pred_ppi.sh and node_class_ppi.sh files contain example usages of the c
 
 ### Acknowledgement
 The original version of this code base was originally forked from https://github.com/williamleif/GraphSAGE, and we owe many thanks to William L. Hamilton for making the code available. We also thank Xiaoxi Wang's contribution to this project during her senior year internship in CUHK.
-
-### License
-
-Copyright 2019, Husky Data Lab, The Chinese University of Hong Kong.
